@@ -14,6 +14,10 @@ app.use(
 const healthRoutes = require("./routes/health.routes");
 app.use("/api", healthRoutes);
 
+const authRoutes = require("./routes/auth.routes");
+app.use("/api/auth", authRoutes);
+
+
 app.get("/", (req, res) => {
   res.json({
     success: true,
