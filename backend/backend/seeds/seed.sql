@@ -45,3 +45,63 @@ VALUES (
   'user',
   'active'
 );
+
+-- Insert projects
+INSERT INTO projects (id, tenant_id, name, description, created_by, status)
+VALUES
+(
+  'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+  '11111111-1111-1111-1111-111111111111',
+  'Project Alpha',
+  'First demo project',
+  '33333333-3333-3333-3333-333333333333',
+  'active'
+),
+(
+  'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+  '11111111-1111-1111-1111-111111111111',
+  'Project Beta',
+  'Second demo project',
+  '33333333-3333-3333-3333-333333333333',
+  'active'
+);
+
+-- Insert tasks
+INSERT INTO tasks (id, tenant_id, project_id, title, description, assigned_to, status)
+VALUES
+(
+  'cccccccc-cccc-cccc-cccc-cccccccccccc',
+  '11111111-1111-1111-1111-111111111111',
+  'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+  'Design database schema',
+  'Create initial DB schema',
+  '33333333-3333-3333-3333-333333333333',
+  'completed'
+),
+(
+  'dddddddd-dddd-dddd-dddd-dddddddddddd',
+  '11111111-1111-1111-1111-111111111111',
+  'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+  'Implement authentication',
+  'Add login and JWT auth',
+  '33333333-3333-3333-3333-333333333333',
+  'in_progress'
+),
+(
+  'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee',
+  '11111111-1111-1111-1111-111111111111',
+  'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+  'Create frontend layout',
+  'Build basic UI screens',
+  '33333333-3333-3333-3333-333333333333',
+  'pending'
+),
+(
+  'ffffffff-ffff-ffff-ffff-ffffffffffff',
+  '11111111-1111-1111-1111-111111111111',
+  'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+  'Dockerize application',
+  'Add docker-compose setup',
+  '33333333-3333-3333-3333-333333333333',
+  'pending'
+);
