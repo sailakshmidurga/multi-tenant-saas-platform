@@ -1,3 +1,15 @@
+-- Insert super admin user
+INSERT INTO users (id, tenant_id, name, email, password, role, status)
+VALUES (
+  '22222222-2222-2222-2222-222222222222',
+  NULL,
+  'Super Admin',
+  'superadmin@system.com',
+  '$2b$10$qttjd3p30ogKWg9vJijdV.VCn7qWqeIZpB.mt9xHmdH9.ngpGi9nC',
+  'super_admin',
+  'active'
+);
+
 -- Insert tenant admin
 INSERT INTO users (id, tenant_id, name, email, password, role, status)
 VALUES (
