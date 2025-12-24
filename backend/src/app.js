@@ -1,0 +1,24 @@
+const express = require("express");
+const cors = require("cors");
+
+const app = express();
+
+app.use(express.json());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    credentials: true,
+  })
+);
+
+const healthRoutes = require("./routes/health.routes");
+app.use("/api", healthRoutes);
+
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "Backend API is running",
+  });
+});
+
+module.exports = app;
