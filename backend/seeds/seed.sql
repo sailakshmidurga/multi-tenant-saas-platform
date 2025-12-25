@@ -33,7 +33,7 @@ VALUES (
   '11111111-1111-1111-1111-111111111111',
   'Demo Admin',
   'admin@demo.com',
-  '$2b$10$qttjd3p30ogKWg9vJijdV.VCn7qWqeIZpB.mt9xHmdH9.ngpGi9nC',
+  '$2b$10$zq3ROd1KXghJE12DQSog5.LJuMqyVLf7OOERjc0WNLJld3fUONtWu',
   'tenant_admin',
   'active'
 );
@@ -45,7 +45,7 @@ VALUES (
   '11111111-1111-1111-1111-111111111111',
   'Demo User One',
   'user1@demo.com',
-  '$2b$10$qttjd3p30ogKWg9vJijdV.VCn7qWqeIZpB.mt9xHmdH9.ngpGi9nC',
+  '$2b$10$zq3ROd1KXghJE12DQSog5.LJuMqyVLf7OOERjc0WNLJld3fUONtWu',
   'user',
   'active'
 );
@@ -57,7 +57,7 @@ VALUES (
   '11111111-1111-1111-1111-111111111111',
   'Demo User Two',
   'user2@demo.com',
-  '$2b$10$qttjd3p30ogKWg9vJijdV.VCn7qWqeIZpB.mt9xHmdH9.ngpGi9nC',
+  '$2b$10$zq3ROd1KXghJE12DQSog5.LJuMqyVLf7OOERjc0WNLJld3fUONtWu',
   'user',
   'active'
 );
