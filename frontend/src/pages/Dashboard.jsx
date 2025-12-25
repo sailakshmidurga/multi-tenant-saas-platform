@@ -27,9 +27,17 @@ function Dashboard({ onLogout }) {
       <h2>Dashboard</h2>
 
       {/* ✅ LOGOUT BUTTON */}
-      <button onClick={onLogout} style={{ marginBottom: "1rem" }}>
-        Logout
-      </button>
+      <button
+  onClick={() => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    onLogout();
+  }}
+  style={{ marginBottom: "1rem" }}
+>
+  Logout
+</button>
+
 
       {/* ✅ ADMIN PANEL */}
       {role === "tenant_admin" && (
@@ -53,13 +61,19 @@ function Dashboard({ onLogout }) {
       </ul>
 
       <h3>Tasks</h3>
-      <ul>
-        {tasks.map((t) => (
-          <li key={t.id}>
-            {t.title} — <b>{t.status}</b>
-          </li>
-        ))}
-      </ul>
+
+{tasks.length === 0 ? (
+  <p>No tasks assigned to you.</p>
+) : (
+  <ul>
+    {tasks.map((t) => (
+      <li key={t.id}>
+        {t.title} — <b>{t.status}</b>
+      </li>
+    ))}
+  </ul>
+)}
+
     </div>
   );
 }
