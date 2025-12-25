@@ -1,12 +1,11 @@
 import { useState } from "react";
 
-function Login() {
+function Login({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleLogin = async () => {
     setError("");
 
     try {
@@ -26,8 +25,9 @@ function Login() {
       }
 
       localStorage.setItem("token", data.token);
-      alert("Login successful!");
+      onLogin();
     } catch (err) {
+      console.error(err);
       setError("Server error");
     }
   };
@@ -38,24 +38,22 @@ function Login() {
 
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      <form onSubmit={handleLogin}>
-        <input
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={{ width: "100%", marginBottom: "1rem" }}
-        />
+      <input
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        style={{ width: "100%", marginBottom: "1rem" }}
+      />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={{ width: "100%", marginBottom: "1rem" }}
-        />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        style={{ width: "100%", marginBottom: "1rem" }}
+      />
 
-        <button type="submit">Login</button>
-      </form>
+      <button onClick={handleLogin}>Login</button>
     </div>
   );
 }
