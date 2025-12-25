@@ -1,31 +1,39 @@
 const express = require("express");
 const router = express.Router();
+
+const authMiddleware = require("../middleware/auth.middleware");
+const  requireRole = require("../middleware/role.middleware");
 const pool = require("../config/db");
 
-const { authenticate } = require("../middleware/auth.middleware");
-const { authorizeRoles } = require("../middleware/role.middleware");
+// GET projects (tenant scoped)
+router.get("/", authMiddleware, async (req, res) => {
+  const { tenantId } = req.user;
 
-// Get all projects for tenant
-router.get(
+  const result = await pool.query(
+    "SELECT * FROM projects WHERE tenant_id = $1",
+    [tenantId]
+  );
+
+  res.json(result.rows);
+});
+
+// CREATE project (tenant_admin only)
+router.post(
   "/",
-  authenticate,
-  authorizeRoles("tenant_admin", "user", "super_admin"),
+  authMiddleware,
+  requireRole("tenant_admin"),
   async (req, res) => {
-    try {
-      const { tenantId, role } = req.user;
+    const { name, description } = req.body;
+    const { tenantId, userId } = req.user;
 
-      const query =
-        role === "super_admin"
-          ? "SELECT * FROM projects"
-          : "SELECT * FROM projects WHERE tenant_id = $1";
+    const result = await pool.query(
+      `INSERT INTO projects (id, tenant_id, name, description, created_by, status)
+       VALUES (gen_random_uuid(), $1, $2, $3, $4, 'active')
+       RETURNING *`,
+      [tenantId, name, description, userId]
+    );
 
-      const values = role === "super_admin" ? [] : [tenantId];
-
-      const result = await pool.query(query, values);
-      res.json(result.rows);
-    } catch (err) {
-      res.status(500).json({ message: "Failed to fetch projects" });
-    }
+    res.status(201).json(result.rows[0]);
   }
 );
 

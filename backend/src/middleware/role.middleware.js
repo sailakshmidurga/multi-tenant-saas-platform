@@ -1,9 +1,7 @@
-exports.authorizeRoles = (...allowedRoles) => {
+module.exports = function requireRole(role) {
   return (req, res, next) => {
-    if (!req.user || !allowedRoles.includes(req.user.role)) {
-      return res.status(403).json({
-        message: "Access denied: insufficient permissions",
-      });
+    if (!req.user || req.user.role !== role) {
+      return res.status(403).json({ message: "Forbidden" });
     }
     next();
   };

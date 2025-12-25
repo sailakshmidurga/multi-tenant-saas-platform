@@ -68,8 +68,9 @@ function Dashboard({ onLogout }) {
   <ul>
     {tasks.map((t) => (
       <li key={t.id}>
-        {t.title} — <b>{t.status}</b>
-      </li>
+  {t.title || "Task"} — <b>{t.status}</b>
+</li>
+
     ))}
   </ul>
 )}

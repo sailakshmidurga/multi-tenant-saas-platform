@@ -6,29 +6,23 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-
-
+// ✅ ROUTES
 const healthRoutes = require("./routes/health.routes");
-app.use("/api", healthRoutes);
-
 const authRoutes = require("./routes/auth.routes");
-app.use("/api/auth", authRoutes);
-
 const protectedRoutes = require("./routes/protected.routes");
-app.use("/api/protected", protectedRoutes);
-
 const projectRoutes = require("./routes/projects.routes");
 const taskRoutes = require("./routes/tasks.routes");
 
+// ✅ MOUNT ROUTES
+app.use("/api", healthRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/protected", protectedRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/tasks", taskRoutes);
 
-
-
-
+// ✅ ROOT CHECK
 app.get("/", (req, res) => {
   res.json({
-    success: true,
     message: "Backend API is running",
   });
 });
