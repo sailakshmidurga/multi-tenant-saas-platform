@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { apiFetch } from "../services/api";
 
-function Dashboard() {
+function Dashboard({ onLogout }) {
   const [projects, setProjects] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [error, setError] = useState("");
+
+  const role = localStorage.getItem("role");
 
   useEffect(() => {
     async function loadData() {
@@ -23,6 +25,23 @@ function Dashboard() {
   return (
     <div style={{ padding: "2rem" }}>
       <h2>Dashboard</h2>
+
+      {/* ✅ LOGOUT BUTTON */}
+      <button onClick={onLogout} style={{ marginBottom: "1rem" }}>
+        Logout
+      </button>
+
+      {/* ✅ ADMIN PANEL */}
+      {role === "tenant_admin" && (
+        <>
+          <h3>Admin Panel</h3>
+          <ul>
+            <li>Create Project</li>
+            <li>Assign Tasks</li>
+            <li>View All Users</li>
+          </ul>
+        </>
+      )}
 
       {error && <p style={{ color: "red" }}>{error}</p>}
 
