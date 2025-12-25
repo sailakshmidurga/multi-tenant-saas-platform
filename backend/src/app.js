@@ -6,13 +6,10 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "http://localhost:5173",
-    ],
-    credentials: true,
+    origin: "*",
   })
 );
+
 
 
 const healthRoutes = require("./routes/health.routes");
