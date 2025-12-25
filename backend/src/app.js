@@ -17,6 +17,10 @@ app.use("/api", healthRoutes);
 const authRoutes = require("./routes/auth.routes");
 app.use("/api/auth", authRoutes);
 
+const protectedRoutes = require("./routes/protected.routes");
+app.use("/api/protected", protectedRoutes);
+
+
 
 app.get("/", (req, res) => {
   res.json({
