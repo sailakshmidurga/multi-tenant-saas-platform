@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { jwtDecode } from "jwt-decode";
+
+
 
 function Login({ onLogin }) {
   const [email, setEmail] = useState("");
@@ -25,6 +28,13 @@ function Login({ onLogin }) {
       }
 
       localStorage.setItem("token", data.token);
+      localStorage.setItem("token", data.token);
+
+const decoded = jwtDecode(data.token);
+localStorage.setItem("role", decoded.role);
+
+onLogin();
+
       onLogin();
     } catch (err) {
       console.error(err);
