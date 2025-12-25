@@ -1,0 +1,44 @@
+{
+  "project_name": "Multi-Tenant SaaS Platform",
+  "description": "A full-stack multi-tenant SaaS platform with JWT authentication, role-based access control, tenant isolation, and Dockerized deployment.",
+  "tech_stack": {
+    "frontend": ["React", "Vite", "JavaScript", "Nginx"],
+    "backend": ["Node.js", "Express.js", "JWT", "bcrypt"],
+    "database": ["PostgreSQL"],
+    "devops": ["Docker", "Docker Compose"]
+  },
+  "features": [
+    "JWT Authentication",
+    "Role-Based Access Control (RBAC)",
+    "Multi-Tenant Architecture",
+    "Admin and User Dashboards",
+    "Projects and Tasks Management",
+    "Dockerized Frontend, Backend, and Database"
+  ],
+  "how_to_run": [
+    "Install Docker and Docker Compose",
+    "Clone the repository",
+    "Run: docker compose up -d",
+    "Access frontend at http://localhost:3000",
+    "Access backend health at http://localhost:5000/api/health"
+  ],
+  "demo_credentials": {
+    "super_admin": {
+      "email": "superadmin@system.com",
+      "password": "User@123"
+    },
+    "tenant_admin": {
+      "email": "admin@demo.com",
+      "password": "User@123"
+    },
+    "user": {
+      "email": "user1@demo.com",
+      "password": "User@123"
+    }
+  },
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/sailakshmidurga/multi-tenant-saas-platform"
+  },
+  "status": "Completed and ready for evaluation"
+}

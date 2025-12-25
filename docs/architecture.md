@@ -1,47 +1,57 @@
-# System Architecture
+### System Architecture
 
-## Overview
-The system follows a standard **three-tier architecture** designed for a multi-tenant SaaS application.
+#### Overview
 
-- **Frontend**: React application served via Nginx
-- **Backend**: Node.js with Express REST API
-- **Database**: PostgreSQL relational database
+The system follows a standard three-tier architecture designed for a multi-tenant SaaS application. Each tier is responsible for a specific function and is deployed as an independent service.
 
-Each layer is containerized and runs as an independent service using Docker Compose.
+The architecture consists of:
 
----
+* A frontend layer built with React and served via Nginx
+* A backend layer built with Node.js and Express providing REST APIs
+* A PostgreSQL database for persistent storage
 
-## Communication Flow
-1. Users interact with the system via a web browser.
-2. The frontend sends HTTP requests to the backend REST APIs.
-3. The backend authenticates requests using JWT tokens.
-4. Role-based access control (RBAC) is enforced at the API level.
-5. The backend performs tenant-scoped queries on PostgreSQL.
-6. Responses are returned to the frontend for rendering.
+Each layer is containerized and managed using Docker Compose.
 
 ---
 
-## Multi-Tenancy Design
-- The application uses a **shared database, tenant-isolated schema**.
-- All tenant-specific tables include a `tenant_id` column.
-- Backend queries are always scoped by `tenant_id` extracted from JWT.
-- This ensures **complete data isolation between tenants**.
+#### Communication Flow
+
+Users interact with the system through a web browser. The frontend sends HTTP requests to backend REST APIs. The backend authenticates incoming requests using JSON Web Tokens and enforces role-based access control.
+
+Once authenticated, the backend performs tenant-scoped queries on the PostgreSQL database to ensure data isolation. The processed response is then sent back to the frontend for rendering.
 
 ---
 
-## Security Architecture
-- JWT-based stateless authentication
-- Passwords hashed using bcrypt
-- Role-based access enforced using Express middleware
-- CORS restricted to frontend origin
-- No direct database access from frontend
+#### Multi-Tenancy Design
+
+The application uses a shared database with logical tenant isolation. Each tenant’s data is distinguished using a tenant identifier. All tenant-specific tables include a tenant identifier column, and backend queries are always filtered using this value extracted from the authentication token.
+
+This design ensures that tenants share infrastructure while maintaining strict data separation.
 
 ---
 
-## Deployment Architecture
-- Docker Compose orchestrates all services
-- Services communicate via an internal Docker network
-- PostgreSQL data persists using Docker volumes
-- Application can be started with a single command:
-  ```bash
-  docker compose up -d
+#### Security Architecture
+
+Security is enforced at multiple levels of the system. Authentication is handled using stateless JWT tokens, and passwords are securely hashed before storage. Role-based access control is implemented using backend middleware to restrict access to APIs based on user roles.
+
+Cross-origin requests are restricted to trusted frontend origins, and the database is never accessed directly from the frontend.
+
+---
+
+#### Deployment Architecture
+
+All system components are deployed using Docker containers. Docker Compose orchestrates the frontend, backend, and database services and manages networking between them.
+
+PostgreSQL data is persisted using Docker volumes to prevent data loss. The entire application stack can be started or stopped using a single command, simplifying deployment and evaluation.
+
+---
+
+#### Key Design Decisions
+
+The three-tier architecture was chosen to ensure separation of concerns and scalability. Stateless authentication enables horizontal scaling of the backend. Logical tenant isolation provides security without increasing infrastructure complexity. Docker-based deployment ensures consistency across environments.
+
+---
+
+#### System Architecture Diagram
+
+A visual representation of the system architecture is provided to illustrate the interaction between frontend, backend, and database layers.

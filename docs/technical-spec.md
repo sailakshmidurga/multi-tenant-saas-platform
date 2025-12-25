@@ -1,234 +1,95 @@
-# Technical Specification
+## Technical Specification
 
-## 1. Introduction
+### Introduction
 
-This document describes the technical implementation of the **Multi-Tenant SaaS Platform**.  
-It covers backend APIs, frontend behavior, authentication and authorization mechanisms, database design approach, and Docker-based deployment.
-
-The system is designed to be:
-- Secure
-- Scalable
-- Tenant-isolated
-- Production-ready
+This document explains the technical implementation of the Multi-Tenant SaaS Platform. It describes how the backend, frontend, authentication system, database, and deployment are designed and work together. The platform is built to be secure, scalable, tenant-isolated, and suitable for real-world SaaS usage.
 
 ---
 
-## 2. Backend Implementation
+### Backend Implementation
 
-### Technology Stack
-- **Node.js** – JavaScript runtime
-- **Express.js** – REST API framework
-- **PostgreSQL** – Relational database
-- **JWT** – Authentication & authorization
-- **bcrypt** – Password hashing
-- **pg** – PostgreSQL client
+The backend of the system is developed using Node.js and Express. It follows a REST-based architecture and is designed to be stateless. Authentication and authorization are handled using JSON Web Tokens, which allows the backend to scale easily without maintaining server-side sessions.
 
-### Backend Architecture
-- REST-based API design
-- Stateless authentication using JWT
-- Middleware-based request validation
-- Tenant-aware query execution
+Middleware is used extensively to validate requests, authenticate users, and enforce role-based access control. All backend operations are tenant-aware, meaning every request is scoped to a specific tenant to ensure data isolation.
 
-### Core Responsibilities
-- Authenticate users
-- Enforce role-based access control (RBAC)
-- Enforce tenant isolation
-- Serve project and task data securely
+The backend is responsible for handling authentication, enforcing security rules, managing tenant-specific data, and serving project and task information securely to the frontend.
 
 ---
 
-## 3. Authentication Mechanism
+### Authentication Mechanism
 
-### Login Flow
-1. User submits email and password.
-2. Backend validates credentials using bcrypt.
-3. On success, a JWT token is generated.
-4. Token contains:
-   - `user_id`
-   - `role`
-   - `tenant_id`
-5. Token is sent to frontend.
+The authentication process begins when a user submits their email and password through the login interface. The backend verifies the credentials using securely hashed passwords. Once authentication is successful, a JWT token is generated and returned to the frontend.
 
-### JWT Payload Structure
-```json
-{
-  "id": "user_uuid",
-  "role": "tenant_admin",
-  "tenant_id": "tenant_uuid"
-}
-Token Usage
-Token is sent in Authorization header:
+The token contains essential user information such as the user’s role and tenant identifier. This token is included with every subsequent request to protected endpoints. The backend validates the token on each request to confirm the user’s identity and permissions.
 
-makefile
-Authorization: Bearer <token>
-Middleware validates token on every protected request.
+---
 
-4. Role-Based Access Control (RBAC)
-Supported Roles
-Role	Description
-super_admin	System-wide access
-tenant_admin	Manage tenant data
-user	Access assigned tasks only
+### Role-Based Access Control (RBAC)
 
-RBAC Enforcement
-Middleware checks role from JWT
+The system supports multiple roles, including super administrator, tenant administrator, and regular user. Each role has different permissions within the application.
 
-API access is allowed or denied based on role
+Role-based access control is enforced on the backend using middleware. The user’s role is extracted from the authentication token and checked before allowing access to specific APIs. While the frontend controls which UI elements are visible to the user, all actual authorization decisions are enforced on the backend to maintain security.
 
-Frontend only controls UI visibility
+---
 
-Backend enforces actual security
+### Multi-Tenancy Strategy
 
-5. Multi-Tenancy Strategy
-Design Approach
-Single PostgreSQL database
+The platform uses a shared database with logical tenant isolation. Each tenant’s data is distinguished using a tenant identifier. All tenant-specific tables include this identifier, ensuring that data belonging to one tenant cannot be accessed by another.
 
-Shared schema with tenant isolation
+The tenant identifier is extracted from the authenticated user’s token and applied to every database query. This design provides strong isolation while keeping the database structure simple and efficient.
 
-All tenant-specific tables include tenant_id
+---
 
-Tenant Isolation
-tenant_id extracted from JWT
+### Database Design
 
-Queries always scoped by tenant
+The database is implemented using PostgreSQL and follows a relational design. The core entities include tenants, users, projects, tasks, and audit logs. Relationships are structured to reflect real-world SaaS usage, such as tenants owning users and projects, and projects containing tasks.
 
-Example:
+Database schema creation is handled using migration files, and initial data is populated using seed scripts. This approach ensures consistency across environments and simplifies deployment.
 
-sql
-SELECT * FROM tasks
-WHERE tenant_id = $1;
-This guarantees:
+---
 
-No cross-tenant data access
+### API Design
 
-Secure multi-tenant behavior
+The backend exposes RESTful APIs for authentication, health checks, project management, task management, and protected user operations. Each API endpoint is designed to validate authentication, enforce role-based access, and apply tenant-level filtering before processing requests.
 
-6. Database Design
-Key Tables
-tenants
+Protected routes ensure that only authorized users can access sensitive information or perform privileged actions.
 
-users
+---
 
-projects
+### Frontend Implementation
 
-tasks
+The frontend is developed using React and built with a modern tooling setup. It provides user interfaces for login, dashboard access, and role-specific views. The frontend stores authentication tokens securely in the browser and includes them with API requests.
 
-audit_logs
+Based on the authenticated user’s role, the frontend conditionally displays appropriate UI elements. However, the frontend does not make any security decisions; it relies entirely on the backend for authorization enforcement.
 
-Relationships
-One tenant → many users
+---
 
-One tenant → many projects
+### API Communication
 
-One project → many tasks
+All communication between the frontend and backend is done through HTTP requests. A centralized API service handles request creation, attaches authentication information, and processes responses. This approach keeps the frontend code clean and consistent.
 
-One user → many assigned tasks
+---
 
-Database schema is created using SQL migrations and populated using seed scripts.
+### Deployment and Containerization
 
-7. API Endpoints
-Authentication
-POST /api/auth/login
+The application is fully containerized using Docker. Separate containers are used for the frontend, backend, and database. Docker Compose is used to orchestrate these services and manage networking between them.
 
-Health Check
-GET /api/health
+Persistent storage is configured for the database to ensure that data is not lost when containers are restarted. This setup allows the entire system to be started or stopped using a single command.
 
-Projects
-GET /api/projects
+---
 
-POST /api/projects (tenant_admin only)
+### Security Considerations
 
-Tasks
-GET /api/tasks
+Security is a core focus of the system design. Passwords are securely hashed, authentication tokens are signed and validated, and sensitive data is never exposed to the frontend. Cross-origin requests are restricted to trusted origins, and all critical access checks are enforced on the backend.
 
-POST /api/tasks (tenant_admin only)
+---
 
-Protected Routes
-GET /api/protected/profile
+### Scalability Considerations
 
-GET /api/protected/super-admin-only
+The backend is stateless and supports horizontal scaling. JWT-based authentication eliminates the need for centralized session storage. Containerization allows the application to be deployed easily in cloud environments. Tenant-based indexing in the database improves performance as the system grows.
 
-8. Frontend Implementation
-Technology Stack
-React (Vite)
+---
 
-JavaScript
+### Conclusion
 
-Fetch API
-
-LocalStorage
-
-Key Responsibilities
-Render login and dashboard UI
-
-Store JWT token and role
-
-Call backend APIs with Authorization header
-
-Conditionally render UI based on role
-
-Role-Based UI Rendering
-jsx
-{role === "tenant_admin" && <AdminPanel />}
-9. API Communication Layer
-All API requests go through a centralized helper.
-
-js
-export async function apiFetch(path) {
-  const token = localStorage.getItem("token");
-
-  const res = await fetch(`http://backend:5000/api${path}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!res.ok) {
-    throw new Error("API request failed");
-  }
-
-  return res.json();
-}
-10. Docker & Deployment
-Dockerized Services
-Service	Port
-Frontend (Nginx)	3000
-Backend (Express)	5000
-PostgreSQL	5432
-
-Deployment Method
-Docker Compose orchestrates services
-
-Internal Docker networking used
-
-PostgreSQL data persisted using volumes
-
-Startup Command
-bash
-docker compose up -d
-11. Security Considerations
-Passwords hashed using bcrypt
-
-JWT tokens are stateless and signed
-
-No sensitive data stored in frontend
-
-CORS restricted to frontend origin
-
-RBAC enforced at API level
-
-12. Scalability Considerations
-Stateless backend supports horizontal scaling
-
-JWT-based auth avoids session storage
-
-Docker enables cloud deployment
-
-Tenant-based indexing improves performance
-
-13. Conclusion
-This technical specification documents a secure, scalable, and production-ready multi-tenant SaaS platform.
-The system follows best practices in authentication, authorization, data isolation, and containerized deployment.
-
-The implementation aligns with modern SaaS architecture used in real-world enterprise applications.
-
+This technical specification describes a robust and production-ready multi-tenant SaaS platform. The system follows industry best practices in authentication, authorization, tenant isolation, database design, and containerized deployment. The architecture is scalable, secure, and suitable for real-world SaaS applications.
