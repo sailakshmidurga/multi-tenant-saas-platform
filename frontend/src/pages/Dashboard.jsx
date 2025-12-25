@@ -3,7 +3,7 @@ import { apiFetch } from "../services/api";
 
 function Dashboard() {
   const [projects, setProjects] = useState([]);
-  const [tasks, setTasks] = useState("");
+  const [tasks, setTasks] = useState([]);
   const [error, setError] = useState("");
 
   useEffect(() => {
