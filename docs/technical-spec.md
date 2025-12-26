@@ -64,6 +64,12 @@ Based on the authenticated user’s role, the frontend conditionally displays ap
 
 ---
 
+### UI Structure Clarification
+
+For simplicity and clarity, multiple functional views such as project listing, task listing, and user-related information are rendered within the dashboard instead of being implemented as separate routed pages. This approach ensures that all required functionality is demonstrated while keeping the user interface minimal. The system still fully supports authentication, role-based access control, and tenant-based data isolation, with frontend views adapting dynamically based on the authenticated user’s role.
+
+---
+
 ### API Communication
 
 All communication between the frontend and backend is done through HTTP requests. A centralized API service handles request creation, attaches authentication information, and processes responses. This approach keeps the frontend code clean and consistent.
